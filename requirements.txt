@@ -1,0 +1,10 @@
+feedparser==6.0.11
+requests==2.32.3
+PyYAML==6.0.1
+python-dotenv==1.0.1
+rich==13.7.1
+openai==1.35.0
+anthropic==0.34.1
+beautifulsoup4==4.12.3
+markdown2==2.4.10
+tldextract==5.1.2

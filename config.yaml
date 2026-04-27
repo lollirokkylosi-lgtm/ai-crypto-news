@@ -1,0 +1,132 @@
+# Configurazione AI & Crypto News Digest
+
+# Fonti dati
+sources:
+  rss:
+    # AI & Tech
+    - name: "OpenAI Blog"
+      url: "https://openai.com/blog/rss/"
+    - name: "Anthropic News"
+      url: "https://www.anthropic.com/news/rss"
+    - name: "Hacker News AI"
+      url: "https://hnrss.org/newest?q=AI+OR+LLM+OR+machine+learning&count=50"
+    - name: "MIT Technology Review"
+      url: "https://www.technologyreview.com/feed/"
+    - name: "TechCrunch AI"
+      url: "https://techcrunch.com/category/artificial-intelligence/feed/"
+    - name: "VentureBeat AI"
+      url: "https://venturebeat.com/category/ai/feed/"
+    - name: "Wired AI"
+      url: "https://www.wired.com/feed/tag/artificial-intelligence/latest/rss"
+
+    # Crypto
+    - name: "CoinDesk"
+      url: "https://coindesk.com/feed/"
+    - name: "CoinTelegraph"
+      url: "https://cointelegraph.com/rss"
+    - name: "The Block Crypto"
+      url: "https://www.theblock.co/feed"
+    - name: "Decrypt"
+      url: "https://decrypt.co/feed"
+    - name: "CryptoSlate"
+      url: "https://cryptoslate.com/feed/"
+
+  # GitHub AI/Crypto projects
+  github:
+    - name: "OpenAI GPT"
+      owner: "openai"
+      name: "gpt-oss"
+    - name: "vLLM"
+      owner: "vllm-project"
+      name: "vllm"
+    - name: "LangChain"
+      owner: "langchain-ai"
+      name: "langchain"
+    - name: "Ollama"
+      owner: "ollama"
+      name: "ollama"
+    - name: "Bitcoin Core"
+      owner: "bitcoin"
+      name: "bitcoin"
+    - name: "Ethereum"
+      owner: "ethereum"
+      name: "go-ethereum"
+
+  # Web search (richiede API Brave)
+  web_search:
+    - "AI artificial intelligence news"
+    - "Bitcoin cryptocurrency latest"
+    - "blockchain ethereum updates"
+
+# Scoring: come pesare gli articoli
+scoring:
+  min_score: 6.0  # Soglia minima per inclusione
+  priority_boost: 2.0  # Bonus per fonti prioritarie
+  priority_sources:
+    - "OpenAI Blog"
+    - "Anthropic News"
+    - "CoinDesk"
+    - "CoinTelegraph"
+    - "MIT Technology Review"
+
+  keyword_boosts:
+    # Keyword specifiche con relativo boost
+    "gpt": 0.5
+    "chatgpt": 0.8
+    "openai": 0.5
+    "anthropic": 0.5
+    "claude": 0.8
+    "llama": 0.5
+    "vllm": 0.5
+    "bitcoin": 1.0
+    "ethereum": 1.0
+    "crypto": 0.8
+    "blockchain": 0.5
+    "defi": 0.8
+    "web3": 0.5
+    "nft": 0.5
+    "stablecoin": 0.8
+
+  keyword_penalties:
+    - "sponsored"
+    - "advertisement"
+    - "promoted"
+
+# Configurazione AI per riassunti
+ai:
+  model: "gpt-3.5-turbo"
+  system_prompt: |
+    Sei un esperto giornalista tecnologico. Scrivi un riassunto chiaro, 
+    conciso e informativo dell'articolo in italiano.
+    Mantieni i fatti principali, i dati chiave e le cifre.
+    Massimo 150 parole, tono professionale ma accessibile.
+
+# Output configurazione
+output:
+  max_articles: 10  # Numero massimo articoli nel digest
+  html:
+    enabled: true  # Genera sempre HTML
+    output_dir: "output"
+    base_url: "https://tuosito.com/digest"
+
+# Notifiche (email, discord, etc)
+notifications:
+  email:
+    enabled: false  # Attivare per invio email
+    sender: "digest@tuodominio.com"
+    recipient: "tuoindirizzo@email.com"
+    smtp:
+      host: "smtp.gmail.com"
+      port: 587
+      tls: true
+      username: ""
+      password: ""
+
+  discord:
+    enabled: false  # Attivare per invio Discord
+    webhook_url: ""
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "ai_crypto_news.log"
