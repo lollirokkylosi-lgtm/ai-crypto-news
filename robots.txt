@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://lollirokkylosi-lgtm.github.io/ai-crypto-news/sitemap.xml
+
+# Regole specifiche
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 10
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 10
+
+# Disallow directory di sistema
+Disallow: /_site/
+Disallow: /modules/
+Disallow: /.github/
+
+# Disallow file temporanei
+Disallow: /*.py$
+Disallow: /*.yaml$
+Disallow: /*.yml$
+Disallow: /*.md$
+Disallow: /*.sh$
+Disallow: /*.db$

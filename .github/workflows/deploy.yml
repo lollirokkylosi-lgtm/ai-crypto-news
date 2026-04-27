@@ -40,6 +40,46 @@ jobs:
           cp output/digest_*.html _site/ 2>/dev/null || true
           cp output/tools_*.html _site/ 2>/dev/null || true
           
+      - name: Generate dynamic sitemap.xml
+        run: |
+          cat > _site/sitemap.xml << SITEMAPEOF
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://lollirokkylosi-lgtm.github.io/ai-crypto-news/</loc>
+    <lastmod>$(date +%Y-%m-%d)</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+SITEMAPEOF
+          for file in output/digest_*.html; do
+            if [ -f "$file" ]; then
+              name=$(basename "$file")
+              echo "  <url>" >> _site/sitemap.xml
+              echo "    <loc>https://lollirokkylosi-lgtm.github.io/ai-crypto-news/$name</loc>" >> _site/sitemap.xml
+              echo "    <lastmod>$(date +%Y-%m-%d)</lastmod>" >> _site/sitemap.xml
+              echo "    <changefreq>daily</changefreq>" >> _site/sitemap.xml
+              echo "    <priority>0.8</priority>" >> _site/sitemap.xml
+              echo "  </url>" >> _site/sitemap.xml
+            fi
+          done
+          echo "</urlset>" >> _site/sitemap.xml
+          
+      - name: Generate robots.txt
+        run: |
+          cat > _site/robots.txt << ROBOTSEOF
+User-agent: *
+Allow: /
+
+Sitemap: https://lollirokkylosi-lgtm.github.io/ai-crypto-news/sitemap.xml
+
+Disallow: /_site/
+Disallow: /modules/
+Disallow: /.github/
+ROBOTSEOF
+
+
+          
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
