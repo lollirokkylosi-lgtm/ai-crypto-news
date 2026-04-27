@@ -126,7 +126,13 @@ notifications:
     enabled: false  # Attivare per invio Discord
     webhook_url: ""
 
+# Directory Tool
+tools:
+  enabled: false  # Impostare true per generare directory HTML
+  update_frequency: "daily"  # daily, weekly, monthly
+
 # Logging
 logging:
   level: "INFO"  # DEBUG, INFO, WARNING, ERROR
   file: "ai_crypto_news.log"
+

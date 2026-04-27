@@ -19,6 +19,8 @@ from modules.deduplicator import Deduplicator
 from modules.scorer import NewsScorer
 from modules.summarizer import AISummarizer
 from modules.notifier import Notifier
+from modules.tools_fetcher import ToolsFetcher
+from modules.tools_directory import ToolsDirectory
 
 console = Console()
 
@@ -153,11 +155,21 @@ def create_digest(config, days_back=1, dry_run=False):
         console.print(f"[cyan]💬 Invio Discord...[/cyan]")
         notifier.send_discord_digest(summarized, config["notifications"]["discord"])
 
-    # Genera file HTML
+    # Genera file HTML notizie
     if config["output"]["html"]["enabled"]:
-        console.print(f"[cyan]🌐 Generazione pagina HTML...[/cyan]")
+        console.print(f"[cyan]🌐 Generazione pagina HTML notizie...[/cyan]")
         html_path = notifier.generate_html_digest(summarized, digest_id, config)
-        console.print(f"  ✓ Pagina: {html_path}")
+        console.print(f"  ✓ Pagina notizie: {html_path}")
+
+    # --- FASE 6: Genera Directory Tool (se richiesto) ---
+    if config.get("tools", {}).get("enabled", False):
+        console.print(f"\n[cyan]🔧 Generazione directory tool...[/cyan]")
+        tools_fetcher = ToolsFetcher()
+        tools_dir = ToolsDirectory(output_dir=config["output"]["html"]["output_dir"])
+        tools_path = tools_dir.update_from_fetcher(tools_fetcher)
+        console.print(f"  ✓ Directory tool: {tools_path}")
+        console.print(f"  ✓ Tool AI: {len(tools_fetcher.fetch_ai_tools())}")
+        console.print(f"  ✓ Tool Crypto: {len(tools_fetcher.fetch_crypto_tools())}")
 
     console.print(f"\n[bold green]✅ Digest completato![/bold green]")
     console.print(f"📁 ID: {digest_id}")
@@ -172,15 +184,20 @@ def main():
     parser.add_argument("--days", type=int, default=1, help="Giorni indietro (default: 1)")
     parser.add_argument("--limit", type=int, default=10, help="Limita articoli (default: 10)")
     parser.add_argument("--config", default="config.yaml", help="File config")
-
+    parser.add_argument("--with-tools", action="store_true", help="Genera anche directory di tool")
+    
     args = parser.parse_args()
-
+    
     config = load_config(args.config)
-
+    
     # Override limiti
     if args.limit:
         config["output"]["max_articles"] = args.limit
-
+    
+    # Abilita directory tool se richiesto
+    if args.with_tools:
+        config.setdefault("tools", {})["enabled"] = True
+    
     try:
         create_digest(config, days_back=args.days, dry_run=args.dry_run)
     except Exception as e:
