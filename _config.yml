@@ -1,0 +1,17 @@
+# GitHub Pages config
+exclude:
+  - .gitignore
+  - .env.example
+  - setup_cron.sh
+  - requirements.txt
+  - config.yaml
+  - README.md
+  - LICENSE
+  - Gemfile
+  - Gemfile.lock
+  - modules/
+  - main.py
+keep_files:
+  - output/
+  - digest_*.html
+  - tools_*.html

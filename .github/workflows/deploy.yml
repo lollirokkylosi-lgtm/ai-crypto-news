@@ -1,0 +1,56 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'  # Esegui ogni giorno alle 8:00
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          
+      - name: Generate News Digest
+        run: |
+          python main.py --with-tools
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Setup HTML directory
+        run: |
+          mkdir -p _site
+          cp output/*.html _site/ 2>/dev/null || true
+          cp output/digest_*.html _site/ 2>/dev/null || true
+          cp output/tools_*.html _site/ 2>/dev/null || true
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages
+          force_orphan: true
+          
+      - name: Create index.html
+        run: |
+          LATEST=$(ls output/digest_*.html 2>/dev/null | sort -r | head -1)
+          if [ -f "$LATEST" ]; then
+            cp "$LATEST" _site/index.html
+          fi

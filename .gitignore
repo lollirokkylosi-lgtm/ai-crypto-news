@@ -15,13 +15,16 @@ venv/
 *.sqlite
 *.sqlite3
 
-# Output
-output/*.html
-!output/.gitkeep
-
 # Logs
 *.log
 logs/
+
+# GitHub Pages build
+_site/
+
+# Output files (generated)
+output/*.html
+!output/.gitkeep
 
 # IDE
 .vscode/

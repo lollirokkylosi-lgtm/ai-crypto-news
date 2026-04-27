@@ -5,12 +5,13 @@ Sistema avanzato per l'aggregazione automatica, l'analisi e la distribuzione di 
 ## 🌟 Caratteristiche
 
 - **Multi-source**: Raccoglie da 15+ feed RSS, GitHub releases
-- **Smart Scoring**: Algoritmo personalizzato per prioritizzare notizie rilevanti
+- **Smart Scoring**: Algoritmo personalizzato per prioritizzare notizie rilevanti  
 - **AI Summarization**: Genera riassunti in italiano con OpenAI/Anthropic
-- **Duplicates Removal**: Elimina articoli simili o duplicati
-- **Multi-format Output**: HTML, Email, Discord, JSON
+- **Duplicates Removal**: Elimina articoli simili o duplicati (85% similarità)
+- **Multi-format Output**: HTML, Email, Discord
 - **Personalizzazione**: Aggiungi facilmente nuove fonti RSS
 - **Categorie automatiche**: AI, Crypto, Tech, Altro
+- **Directory Tool**: 🤖 AI Tools + 🪙 Crypto Tools aggiornati
 
 ## 📦 Installazione
 
@@ -22,26 +23,26 @@ Python 3.8+
 ### 2. Configurazione
 ```bash
 cd ai-crypto-news
-cp .env.example .env
-# Modifica .env con le tue API keys
-```
-
-### 3. Installa dipendenze
-```bash
 pip install -r requirements.txt
+cp .env.example .env
+# Modifica .env con le tue API keys (opzionale)
 ```
 
-## 🚀 Utilizzo
+### 3. Esecuzione
 
-### Modalità Test (Dry Run)
+**Modalità Test:**
 ```bash
 python main.py --dry-run
 ```
-Genera il digest senza inviare notifiche.
 
-### Modalità Normale
+**Modalità Normale:**
 ```bash
 python main.py
+```
+
+**Con Directory Tool:**
+```bash
+python main.py --with-tools
 ```
 
 ### Opzioni
@@ -51,40 +52,27 @@ python main.py --limit 5   # Solo 5 articoli
 python main.py --config custom.yaml
 ```
 
-## 📝 Configurazione
+## 🔧 Configurazione
 
 Modifica `config.yaml` per personalizzare:
 
 - **Fonti RSS**: Aggiungi i tuoi feed preferiti
-- **Scoring**: Regola pesi e soglie
-- **Output**: Attiva/disattiva canali notifica
+- **Scoring**: Regola pesi e soglie  
+- **Output**: Attiva/disattiva canali
 - **AI**: Configura modello e prompt
+- **Tools**: Abilita directory tool
 
 ### Fonti Incluse (Default)
 
 **AI/ML:**
-- OpenAI Blog
-- Anthropic News  
-- MIT Tech Review
-- Hacker News (AI)
-- TechCrunch AI
-- VentureBeat AI
-- Wired AI
+- OpenAI Blog, Anthropic News, MIT Tech Review
+- Hacker News AI, TechCrunch AI, VentureBeat AI, Wired AI
 
 **Crypto:**
-- CoinDesk
-- CoinTelegraph
-- The Block
-- Decrypt
-- CryptoSlate
+- CoinDesk, CoinTelegraph, The Block, Decrypt, CryptoSlate
 
 **GitHub:**
-- OpenAI GPT
-- vLLM
-- LangChain
-- Ollama
-- Bitcoin Core
-- Ethereum
+- GPT, vLLM, LangChain, Ollama, Bitcoin, Ethereum
 
 ## 🔧 Come Funziona
 
@@ -118,11 +106,33 @@ Ogni articolo riceve un punteggio base **5.0**:
 
 **Soglia minima**: 6.0 (configurabile)
 
+## 🤖 AI & Crypto Tools Directory
+
+Per generare una pagina con i migliori tool AI e Crypto:
+
+```bash
+python main.py --with-tools
+```
+
+La directory include:
+- **🤖 Tool AI**: LLM, generatori immagini, strumenti ML
+- **🪙 Tool Crypto**: Exchange, wallet, protocolli DeFi  
+- **📊 Dati**: TVL, rating, popolarità
+- **🔗 Link diretti** ai siti
+
+Output: `output/tools_YYYYMMDD.html`
+
+### Fonti Dati Tool
+- Product Hunt (trending AI/Crypto)
+- GitHub (repository popolari)
+- CoinGecko (exchange e protocolli)
+- DeFiLlama (TVL protocolli)
+
 ## 🎯 Output
 
 ### HTML Page
 Pagina web responsive con:
-- Statistiche (totale, AI, Crypto)
+- Statistiche in alto
 - Cards per ogni articolo
 - Categorie colorate (AI 🟢, Crypto 🟠)
 - Link diretti
@@ -130,7 +140,7 @@ Pagina web responsive con:
 ### Email Digest
 Inviata via SMTP con:
 - Formattazione HTML
-- Sintesi di ogni articolo
+- Sintesi articoli
 - Link originali
 
 ### Discord
@@ -139,67 +149,50 @@ Embed con:
 - Score e categoria
 - Link immediati
 
-## 🔐 Sicurezza
+## 🔐 Sicurezza & Privacy
 
-- **Niente chiavi nel Git**: Tutto in `.env` (nel `.gitignore`)
-- **Rate limit**: Gestione automatica API GitHub
-- **Error handling**: Fallback senza IA se API mancante
+- **Niente chiavi nel Git**: Tutto in `.env`
+- **Rate limit**: Gestione API GitHub
+- **Error handling**: Fallback senza IA
+- **Dati locali**: SQLite, nessun cloud
 
 ## ⚙️ Automazione
 
 ### Linux/Mac (Cron)
 ```bash
-# Ogni mattina alle 8
 0 8 * * * cd /path/to/ai-crypto-news && python main.py >> logs/digest.log 2>&1
 ```
 
 ### Windows (Task Scheduler)
 1. Task Scheduler → Create Task
 2. Trigger: Daily 8:00
-3. Action: `python C:\path\main.py`
-4. Start in: `C:\path\ai-crypto-news`
+3. Action: `python main.py`
 
-## 📈 Estensioni
+## 📈 Estensioni Possibili
 
-### Aggiungere Nuova Fonte RSS
-```yaml
-sources:
-  rss:
-    - name: "Mio Blog Preferito"
-      url: "https://blog.example.com/feed.xml"
+- Telegram bot notifications
+- Twitter/KOL monitoring
+- Web scraping avanzato
+- Machine learning classificazione
+- Interfaccia web con Flask
+- API REST pubblica
+
+## 📞 Supporto & Troubleshooting
+
+**Problemi comuni:**
+- Timeout RSS: Aumentare timeout in `fetcher.py`
+- Rate limit GitHub: Ottenere token
+- Nessun riassunto IA: Configurare API key
+
+**Log:**
+```bash
+tail -f ai_crypto_news.log
 ```
-
-### Aggiungere Repository GitHub
-```yaml
-sources:
-  github:
-    - name: "Mio Progetto"
-      owner: "username"
-      name: "repo"
-```
-
-### Nuove Keyword
-```yaml
-scoring:
-  keyword_boosts:
-    "rag": 0.8  # Retrieval-Augmented Generation
-    "mcp": 0.6  # Model Context Protocol
-```
-
-## 📞 Supporto
-
-Per problemi o suggerimenti, controlla:
-1. Log file: `ai_crypto_news.log`
-2. Output console: `--dry-run` per debug
 
 ## 📄 Licenza
 
 MIT - Liberamente modificabile
 
-## 🙏 Crediti
+--- Sviluppato con ❤️ per la community OpenClaw ---
 
-Basato sul pattern multi-source di awesome-openclaw-usecases
-
----
-
-**Happy Coding! 🚀**
+--- Happy Coding! 🚀 ---
